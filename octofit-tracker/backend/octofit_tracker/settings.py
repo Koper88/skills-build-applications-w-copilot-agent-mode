@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,15 @@ SECRET_KEY = 'django-insecure-6p=nmi_(uhgfxjr3^*te*!=g4&+i3bt88183=zsn$xyyne_*&5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+# Get the codespace name from environment variable
+CODESPACE_NAME = os.getenv('CODESPACE_NAME', 'localhost')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    f'{CODESPACE_NAME}-8000.app.github.dev',
+    f'{CODESPACE_NAME}.app.github.dev',
+    '*'
+]
 
 
 # Application definition
@@ -78,20 +87,32 @@ WSGI_APPLICATION = 'octofit_tracker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'octofit_db',
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': 'mongodb://localhost:27017',
-            'username': '',
-            'password': '',
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1',
-        },
+# Use MongoDB if available, otherwise fall back to SQLite for development
+USE_MONGODB = os.getenv('USE_MONGODB', 'false').lower() == 'true'
+
+if USE_MONGODB:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'djongo',
+            'NAME': 'octofit_db',
+            'ENFORCE_SCHEMA': False,
+            'CLIENT': {
+                'host': 'mongodb://localhost:27017',
+                'username': '',
+                'password': '',
+                'authSource': 'admin',
+                'authMechanism': 'SCRAM-SHA-1',
+            },
+        }
     }
-}
+else:
+    # Default to SQLite for local development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
