@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -7,27 +7,14 @@ import Leaderboard from './components/Leaderboard';
 import Teams from './components/Teams';
 import Users from './components/Users';
 import Workouts from './components/Workouts';
+import getApiBaseUrl from './config/api';
 
 function App() {
-  const getApiBaseUrl = () => {
-    const codespaceName = process.env.REACT_APP_CODESPACE_NAME || 'localhost';
-    const protocol = process.env.REACT_APP_API_PROTOCOL || 'https';
-    const port = process.env.REACT_APP_API_PORT || '8000';
-    
-    if (codespaceName === 'localhost') {
-      return `http://localhost:${port}`;
-    }
-    return `${protocol}://${codespaceName}-${port}.app.github.dev`;
-  };
-
   useEffect(() => {
+    // Log API configuration on app startup
     const apiBaseUrl = getApiBaseUrl();
-    console.log('API Base URL:', apiBaseUrl);
-    console.log('Environment Variables:', {
-      REACT_APP_CODESPACE_NAME: process.env.REACT_APP_CODESPACE_NAME,
-      REACT_APP_API_PROTOCOL: process.env.REACT_APP_API_PROTOCOL,
-      REACT_APP_API_PORT: process.env.REACT_APP_API_PORT,
-    });
+    console.log('🚀 OctoFit Tracker initialized');
+    console.log('📡 API Base URL:', apiBaseUrl);
   }, []);
 
   return (

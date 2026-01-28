@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import getApiBaseUrl from '../config/api';
 
 function Teams() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const getApiBaseUrl = () => {
-    const codespaceName = process.env.REACT_APP_CODESPACE_NAME || 'localhost';
-    const protocol = process.env.REACT_APP_API_PROTOCOL || 'https';
-    const port = process.env.REACT_APP_API_PORT || '8000';
-    
-    if (codespaceName === 'localhost') {
-      return `http://localhost:${port}`;
-    }
-    return `${protocol}://${codespaceName}-${port}.app.github.dev`;
-  };
 
   useEffect(() => {
     const fetchTeams = async () => {
